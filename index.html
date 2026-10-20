@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shakti Mesh - Universal Women's Safety & Peer-to-Peer Response Network</title>
+  <meta name="description" content="A location-agnostic, peer-to-peer safety mesh connecting women in distress with verified nearby female responders, community volunteers, and emergency services.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile-frame.css">
+</head>
+<body>
+
+  <!-- Top Header Bar -->
+  <header class="app-header">
+    <div class="brand-section">
+      <!-- High-tech glowing SVG emblem -->
+      <svg class="brand-emblem-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 5 L88 22 V50 C88 74 50 95 50 95 C50 95 12 74 12 50 V22 L50 5 Z" stroke="url(#shieldGrad)" stroke-width="4" fill="rgba(14, 21, 38, 0.6)"/>
+        <circle cx="50" cy="38" r="9" stroke="#00f0ff" stroke-width="2.5" fill="none"/>
+        <path d="M35 62 C35 50 65 50 65 62 C65 72 50 78 50 78 C50 78 35 72 35 62 Z" stroke="#e024c3" stroke-width="2.5" fill="none"/>
+        <circle cx="30" cy="40" r="3" fill="#00f0ff"/>
+        <circle cx="70" cy="40" r="3" fill="#00f0ff"/>
+        <circle cx="50" cy="20" r="3" fill="#e024c3"/>
+        <line x1="30" y1="40" x2="50" y2="38" stroke="rgba(0, 240, 255, 0.4)" stroke-width="1.5"/>
+        <line x1="70" y1="40" x2="50" y2="38" stroke="rgba(0, 240, 255, 0.4)" stroke-width="1.5"/>
+        <defs>
+          <linearGradient id="shieldGrad" x1="12" y1="5" x2="88" y2="95" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#e024c3"/>
+            <stop offset="0.5" stop-color="#9d4edd"/>
+            <stop offset="1" stop-color="#00f0ff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-titles">
+        <h1 id="appMainTitle">SHAKTI MESH</h1>
+        <div class="brand-tagline">Universal Women's Safety & Peer-to-Peer Response Network</div>
+      </div>
+    </div>
+
+    <div class="header-status-pill">
+      <div class="status-dot-pulse"></div>
+      <span>34 Responders In Range • GPS ±4m</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-audio-mute" id="audioMuteBtn" title="Toggle Sound Engine">🔊 Audio Active</button>
+    </div>
+  </header>
+
+  <!-- Navigation Switcher Pills -->
+  <nav class="navigation-bar" aria-label="Main Navigation">
+    <div class="nav-tabs-wrapper">
+      <button class="nav-tab-btn active" data-view="victim-app" id="tabVictimApp">
+        <span>🛡️</span> Victim SOS App
+      </button>
+      <button class="nav-tab-btn" data-view="responder-map" id="tabResponderMap">
+        <span>📡</span> Responder Mesh Map
+      </button>
+      <button class="nav-tab-btn" data-view="cascade-hub" id="tabCascadeHub">
+        <span>⚡</span> 4-Tier Response Cascade
+      </button>
+      <button class="nav-tab-btn" data-view="fraud-testbench" id="tabFraudTestbench">
+        <span>🧠</span> AI Fraud & Adaptive Trust
+      </button>
+      <button class="nav-tab-btn" data-view="pitch-deck" id="tabPitchDeck">
+        <span>🏆</span> Technovision Pitch & Specs
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main View Container -->
+  <main class="main-content-area">
+
+    <!-- ================= VIEW 1: VICTIM PHONE APP ================= -->
+    <section class="view-panel active" id="victim-app">
+      <div class="victim-view-layout">
+
+        <!-- Smartphone Mockup Container -->
+        <div class="phone-mockup-wrapper">
+          <div class="smartphone-frame">
+            <!-- Dynamic Island Notch -->
+            <div class="phone-notch">
+              <div class="notch-sensor"></div>
+              <div class="notch-camera"></div>
+            </div>
+
+            <!-- Phone Status Bar -->
+            <div class="phone-status-bar">
+              <span id="phoneClock">11:14 PM</span>
+              <div style="display: flex; gap: 6px; font-size: 11px;">
+                <span>5G</span>
+                <span>📶</span>
+                <span>🔋 88%</span>
+              </div>
+            </div>
+
+            <div class="phone-screen-body">
+              <!-- Internal Submode Switcher -->
+              <div class="submode-selector">
+                <button class="submode-btn active" data-submode="street-sos">Street SOS</button>
+                <button class="submode-btn" data-submode="calculator">Covert Calc</button>
+                <button class="submode-btn" data-submode="rural-ivr">Rural IVR</button>
+                <button class="submode-btn" data-submode="trip-guard">Trip Guard</button>
+              </div>
+
+              <!-- SUBSCREEN 1: Standard Street SOS -->
+              <div class="phone-subscreen active" id="subscreen-street-sos">
+                <div class="status-banner ready-standby" id="victimStatusBanner">
+                  <div class="banner-pulse" style="background: var(--safe-green); box-shadow: 0 0 10px var(--safe-green);"></div>
+                  <div>
+                    <strong>PROTECTION ACTIVE • 34 RESPONDERS NEARBY</strong>
+                    <p>High Accuracy GPS Locked • Mesh Relay Ready</p>
+                  </div>
+                </div>
+
+                <!-- Giant Pulsing SOS Button -->
+                <div class="sos-pulse-container">
+                  <button class="main-sos-button" id="mainSosPulseBtn" aria-label="Trigger Emergency SOS">
+                    <span class="sos-label-huge">SOS</span>
+                    <span class="sos-subtext">Tap or Hold</span>
+                  </button>
+                </div>
+
+                <!-- Fast Trigger Actions -->
+                <div class="quick-trigger-grid">
+                  <button class="trigger-tile" id="simulateShakeBtn">
+                    <span class="tile-icon">📳</span>
+                    <span class="tile-title">Shake 3x Pattern</span>
+                    <span class="tile-desc">Violent shake trigger</span>
+                  </button>
+                  <button class="trigger-tile" id="simulatePowerTapBtn">
+                    <span class="tile-icon">⚡</span>
+                    <span class="tile-title">Tap Power (5x)</span>
+                    <span class="tile-desc">Hardware button sim</span>
+                  </button>
+                  <button class="trigger-tile" id="fakeCallModeBtn">
+                    <span class="tile-icon">📞</span>
+                    <span class="tile-title">Fake Call Screen</span>
+                    <span class="tile-desc">Call from Papa ❤️</span>
+                  </button>
+                  <button class="trigger-tile" id="strobeSirenBtn">
+                    <span class="tile-icon">🚨</span>
+                    <span class="tile-title">Siren & Strobe</span>
+                    <span class="tile-desc">Loud crowd alarm</span>
+                  </button>
+                </div>
+
+                <!-- Voice Trigger Row -->
+                <button class="trigger-tile" id="simulateVoiceSosBtn" style="margin-top: 10px; width: 100%;">
+                  <span class="tile-title">🎙️ Voice SOS ("Hey Safety, Emergency")</span>
+                  <span class="tile-desc">Hands-free microphone detection simulator</span>
+                </button>
+
+                <!-- Cancel SOS Button (shown when alert active) -->
+                <button class="btn-cancel-sos" id="cancelSosBtn">
+                  <span>✕ Cancel Alert (False Alarm / Safe Now)</span>
+                </button>
+              </div>
+
+              <!-- SUBSCREEN 2: Covert Calculator Disguise (Domestic Violence) -->
+              <div class="phone-subscreen" id="subscreen-calculator">
+                <div class="calculator-screen-box">
+                  <div class="calc-display-area">
+                    <div class="calc-covert-dot" id="calcCovertDot" title="Silent Covert Transmission Indicator"></div>
+                    <div class="calc-digits" id="calcDisplay">0</div>
+                  </div>
+                  <div class="calc-keypad">
+                    <button class="calc-btn calc-fn" data-val="AC">AC</button>
+                    <button class="calc-btn calc-fn" data-val="+/-">±</button>
+                    <button class="calc-btn calc-fn" data-val="%">%</button>
+                    <button class="calc-btn calc-op" data-val="÷">÷</button>
+
+                    <button class="calc-btn" data-val="7">7</button>
+                    <button class="calc-btn" data-val="8">8</button>
+                    <button class="calc-btn" data-val="9">9</button>
+                    <button class="calc-btn calc-op" data-val="×">×</button>
+
+                    <button class="calc-btn" data-val="4">4</button>
+                    <button class="calc-btn" data-val="5">5</button>
+                    <button class="calc-btn" data-val="6">6</button>
+                    <button class="calc-btn calc-op" data-val="-">−</button>
+
+                    <button class="calc-btn" data-val="1">1</button>
+                    <button class="calc-btn" data-val="2">2</button>
+                    <button class="calc-btn" data-val="3">3</button>
+                    <button class="calc-btn calc-op" data-val="+">+</button>
+
+                    <button class="calc-btn calc-zero" data-val="0">0</button>
+                    <button class="calc-btn" data-val=".">.</button>
+                    <button class="calc-btn calc-op" data-val="=">=</button>
+                  </div>
+
+                  <div class="covert-hint-bar">
+                    🔒 Domestic Violence Safety: Enter <strong>911=</strong> or <strong>112=</strong> to silently notify verified female counselor.
+                  </div>
+
+                  <button class="btn-quick-exit">
+                    <span>🛡️ Quick Exit (Swap to Weather)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- SUBSCREEN 3: Rural Non-Internet (Technovision Image Feature) -->
+              <div class="phone-subscreen" id="subscreen-rural-ivr">
+                <div class="rural-ivr-screen">
+                  <div class="rural-card">
+                    <h4>📡 Toll-Free Silent Missed Call</h4>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+                      No smartphone or internet required. Works on any basic 2G feature phone. Zero balance needed.
+                    </p>
+                    <button class="btn-missed-call-dial" id="triggerRuralMissedCallBtn">
+                      📞 Give Silent Missed Call (1800-SHAKTI)
+                    </button>
+                    <span style="font-size: 10px; color: var(--safe-green); display: block; margin-top: 6px;">
+                      ✓ Auto-triangulates nearest cell tower & alerts Anganwadi/ASHA leaders
+                    </span>
+                  </div>
+
+                  <div class="rural-card">
+                    <h4>💬 Coded WhatsApp Emoji Trigger</h4>
+                    <p style="font-size: 11px; color: var(--text-muted);">
+                      Sending a pre-agreed emoji in ordinary family group triggers silent help protocol:
+                    </p>
+                    <div class="whatsapp-emoji-row">
+                      <button class="whatsapp-coded-emoji" title="Code: Silent Distress">🌸</button>
+                      <button class="whatsapp-coded-emoji" title="Code: Domestic Urgent">🫖</button>
+                      <button class="whatsapp-coded-emoji" title="Code: Need Walk Escort">🚶‍♀️</button>
+                    </div>
+                  </div>
+
+                  <button class="btn-quick-exit">
+                    <span>🛡️ Quick Exit (Hide Trace)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- SUBSCREEN 4: Trip Guard / Auto-Cab Safety -->
+              <div class="phone-subscreen" id="subscreen-trip-guard">
+                <div class="rural-card">
+                  <h4 style="color: var(--neon-cyan);">🚕 Live Trip Watchdog</h4>
+                  <p style="font-size: 11px; color: var(--text-muted);">
+                    Traveling via Ola/Uber/Auto at night? Watchdog tracks vehicle movement and alerts if route deviates by >300m.
+                  </p>
+                  <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 11px;">
+                    <div>Route: Indiranagar ➔ Koramangala</div>
+                    <div>Est. Arrival: 11:35 PM (21 min)</div>
+                    <div style="color: var(--safe-green); margin-top: 4px;">● GPS Stream Active (Encrypted)</div>
+                  </div>
+                  <button class="btn-resp-action primary" id="startWatchdogBtn" style="width: 100%;">
+                    ⏱️ Start Scheduled Check-in ETA
+                  </button>
+                </div>
+              </div>
+
+              <!-- SUBSCREEN 5: Innocent Weather Screen (Quick Exit Target) -->
+              <div class="phone-subscreen" id="subscreen-innocent-weather">
+                <div class="weather-screen">
+                  <div class="weather-city">Bangalore</div>
+                  <div class="weather-temp">22°</div>
+                  <div class="weather-condition">Partly Cloudy • Humid</div>
+                  <div class="forecast-list">
+                    <div class="forecast-row"><span>Today</span> <span>28° / 20°</span></div>
+                    <div class="forecast-row"><span>Tuesday</span> <span>29° / 21°</span></div>
+                    <div class="forecast-row"><span>Wednesday</span> <span>27° / 19°</span></div>
+                  </div>
+                  <p style="font-size: 10px; color: var(--text-dim); margin-top: 14px;">Screen locked to innocent mode. Tap status bar 3x to return.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="mockup-controls-hint">
+            📱 Interactive Phone Prototype • Tap triggers or switch sub-modes
+          </div>
+        </div>
+
+        <!-- Right Side: Scenario Launcher & Context Info -->
+        <div class="victim-features-sidepanel">
+          <div class="feature-overview-card">
+            <h3>🎯 Test Different Emergency Scenarios</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              Shakti Mesh adapts its response logic, privacy level, and responder matching dynamically based on context.
+            </p>
+            <div class="scenario-pill-list">
+              <button class="scenario-btn" id="presetLegitStudent">
+                🌙 Scenario A: Night Street Stalker (Indiranagar)
+              </button>
+              <button class="scenario-btn" id="presetCovertRural">
+                🏠 Scenario B: Rural Home Abuse (Covert Silent Call)
+              </button>
+              <button class="scenario-btn" id="presetSuspiciousLure">
+                ⚠️ Scenario C: Anti-Luring Scam Test (Isolated Trap)
+              </button>
+            </div>
+          </div>
+
+          <div class="feature-overview-card">
+            <h3>⚡ Context-Aware Alert Routing</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; font-size: 12px;">
+              <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+                <strong style="color: var(--neon-cyan);">Street at Night:</strong>
+                <p style="color: var(--text-dim); margin-top: 4px;">Assumes chase/stalker. Alerts verified women in 200m, enables live recording.</p>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+                <strong style="color: var(--neon-magenta);">Home / Domestic:</strong>
+                <p style="color: var(--text-dim); margin-top: 4px;">Assumes domestic abuse. Zero public broadcast. Routes exclusively to trained counselors.</p>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+                <strong style="color: var(--warn-amber);">In Cab / Vehicle:</strong>
+                <p style="color: var(--text-dim); margin-top: 4px;">Monitors vehicle route. Alerts contacts and police if deviation >300m.</p>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+                <strong style="color: var(--safe-green);">Workplace:</strong>
+                <p style="color: var(--text-dim); margin-top: 4px;">Silent prompt to female colleagues on same floor to "drop by casually".</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-overview-card">
+            <h3>🔒 Evidence Custody & Legal Chain</h3>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+              All audio, video, and GPS coordinates are encrypted locally, hashed via SHA-256, and timestamped on a tamper-proof ledger to ensure legal admissibility under Section 65B of Indian Evidence Act.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: RESPONDER MESH & MAP ================= -->
+    <section class="view-panel" id="responder-map">
+      <div class="responder-view-layout">
+
+        <!-- Left Tactical Canvas Map -->
+        <div class="map-container-box">
+          <canvas id="tacticalMeshCanvas"></canvas>
+
+          <!-- Floating HUD Overlay -->
+          <div class="map-hud-overlay">
+            <div style="font-weight: 700; color: #fff;">TACTICAL P2P MESH INTERCEPTOR</div>
+            <div class="map-hud-legend">
+              <div class="legend-item"><span class="legend-bullet red"></span> Victim Distress</div>
+              <div class="legend-item"><span class="legend-bullet cyan"></span> 200m Verified Women</div>
+              <div class="legend-item"><span class="legend-bullet amber"></span> 1km NGO Patrols</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Responder Action Console -->
+        <div class="responder-sidebar">
+          <div class="resp-alert-card">
+            <div class="resp-alert-header">
+              <span class="resp-badge-urgency">🔴 Immediate Tier 1</span>
+              <span style="font-size: 11px; color: var(--text-dim);">00:42 ago</span>
+            </div>
+            <h3 id="respAlertTitle" style="font-size: 16px; margin-bottom: 4px;">STREET HARASSMENT ALERT</h3>
+            <p id="respAlertDist" style="font-size: 12px; color: var(--neon-cyan); margin-bottom: 6px;">
+              140m away • Near Metro Gate 3, Indiranagar
+            </p>
+            <p id="respAlertType" style="font-size: 11px; color: var(--text-muted);">
+              Requested: Female physical presence nearby
+            </p>
+
+            <div class="resp-action-grid">
+              <button class="btn-resp-action primary" id="respWalkOverBtn">
+                🚶‍♀️ I'm Walking Toward Her Location
+              </button>
+              <button class="btn-resp-action secondary" id="respVideoCallBtn">
+                📹 Start Discreet Companion Video Call
+              </button>
+              <button class="btn-resp-action danger" id="respCallPoliceBtn">
+                🚓 Dispatch Police 112 Interceptor
+              </button>
+              <button class="btn-resp-action secondary" id="respRemoteSirenBtn">
+                🔊 Sound Distraction Alarm on Phone
+              </button>
+            </div>
+          </div>
+
+          <div class="resp-safety-rule-notice">
+            <strong>🛡️ Responder Safety Rule:</strong><br>
+            Volunteers are never dispatched alone. Shakti Mesh automatically pairs at least two female responders before arrival to ensure mutual safety and prevent luring traps.
+          </div>
+
+          <div class="feature-overview-card" style="padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="font-size: 32px;">👩‍⚕️</div>
+              <div>
+                <strong style="font-size: 13px;">Dr. Neha K. (Your Profile)</strong>
+                <p style="font-size: 11px; color: var(--safe-green);">● Verified Responder • Level 3 Trauma Certified</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: 4-TIER RESPONSE CASCADE ================= -->
+    <section class="view-panel" id="cascade-hub">
+      <div class="cascade-view-layout">
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h2 style="font-size: 22px; font-family: var(--font-heading);">4-Tier Dynamic Response Cascade</h2>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              Time-tiered escalation protocol ensures instant local help within seconds without overburdening emergency services.
+            </p>
+          </div>
+          <div id="activeTierBadge" class="tier-indicator tier-1">
+            <span>● TIER 1 ACTIVE: Immediate Proximity</span>
+          </div>
+        </div>
+
+        <!-- 4 Steps Strip -->
+        <div class="cascade-timeline-strip">
+          <div class="cascade-step active" id="cascadeStep1">
+            <div class="cascade-step-num">Tier 1 • 0-2 Minutes</div>
+            <h4>Immediate Proximity</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Verified women in 200m: fellow commuters, opted-in shopkeepers, female guards.</p>
+            <div class="cascade-step-timer" id="cascadeTier1Time">01:25</div>
+          </div>
+
+          <div class="cascade-step" id="cascadeStep2">
+            <div class="cascade-step-num">Tier 2 • 2-10 Minutes</div>
+            <h4>Community Patrols</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Background-checked volunteers in 1km, local NGO rapid response teams.</p>
+            <div class="cascade-step-timer" id="cascadeTier2Time">08:00</div>
+          </div>
+
+          <div class="cascade-step" id="cascadeStep3">
+            <div class="cascade-step-num">Tier 3 • Immediate</div>
+            <h4>Official Services</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Karnataka State Police 112 gateway, 181 Women Helpline, Ambulance CAD.</p>
+            <div style="font-size: 12px; color: var(--text-dim); margin-top: 8px;">Auto-dialer Standby</div>
+          </div>
+
+          <div class="cascade-step active" id="cascadeStep4">
+            <div class="cascade-step-num">Tier 4 • Parallel</div>
+            <h4>Trusted Contacts</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Emergency contacts get live GPS telemetry & encrypted audio capture stream.</p>
+            <div style="font-size: 12px; color: var(--safe-green); margin-top: 8px;">✓ 3 Contacts Alerted</div>
+          </div>
+        </div>
+
+        <!-- Cryptographic Evidence Vault -->
+        <div class="evidence-vault-container">
+          <div class="evidence-card">
+            <h3><span>🎙️</span> Real-Time Cloud Audio Evidence Capture</h3>
+            <div class="evidence-waveform-box">
+              <canvas id="evidenceWaveform"></canvas>
+            </div>
+            <div class="evidence-meta-row">
+              <span>Recording Status:</span>
+              <span style="color: var(--emergency-red); font-weight: 700;">● Active (Buffered to Encrypted S3)</span>
+            </div>
+            <div class="evidence-meta-row">
+              <span>Sampling Rate:</span>
+              <span>48 kHz Opus Encrypted</span>
+            </div>
+            <div class="evidence-meta-row">
+              <span>Victim Override:</span>
+              <span>Protected against attacker device wipe</span>
+            </div>
+          </div>
+
+          <div class="evidence-card">
+            <h3><span>⛓️</span> Legal Admissibility & Forensic Chain of Custody</h3>
+            <div class="evidence-meta-row">
+              <span>SHA-256 Evidence Hash:</span>
+              <span class="mono-hash">e3b0c44298fc1c149afbf4c8996fb92427...</span>
+            </div>
+            <div class="evidence-meta-row">
+              <span>Blockchain Timestamp:</span>
+              <span class="mono-hash">Polygon Block #5892104 (Immutable)</span>
+            </div>
+            <div class="evidence-meta-row">
+              <span>Court Admissibility:</span>
+              <span style="color: var(--safe-green);">✓ Section 65B Indian Evidence Act compliant</span>
+            </div>
+            <div class="evidence-meta-row">
+              <span>Automated Route:</span>
+              <span>Direct to Police Women's Cell & Legal NGO</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: AI FRAUD TESTBENCH ================= -->
+    <section class="view-panel" id="fraud-testbench">
+      <div class="fraud-testbench-layout">
+
+        <!-- Controls Form -->
+        <div class="fraud-controls-card">
+          <h2 style="font-size: 20px; font-family: var(--font-heading); margin-bottom: 6px;">
+            AI Fraud & Adaptive Trust Simulator
+          </h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">
+            The 90/10 Rule: 90% of emergencies are real; optimize for speed without letting bad actors abuse responder goodwill.
+          </p>
+
+          <div class="form-group-slider">
+            <label>
+              <span>User Account Age</span>
+              <strong id="fraudAccountAgeVal" style="color: var(--neon-cyan);">90 days</strong>
+            </label>
+            <input type="range" min="1" max="365" value="90" class="range-slider" id="fraudAccountAge">
+          </div>
+
+          <div class="form-grid-selects">
+            <div class="form-select-box">
+              <label>KYC Verification Level</label>
+              <select id="fraudKycLevel">
+                <option value="aadhaar_biometric">Govt Aadhaar Biometric KYC (High Trust)</option>
+                <option value="video_selfie">Video Selfie Verified (Medium Trust)</option>
+                <option value="unverified">Unverified / Anonymous (High Risk)</option>
+              </select>
+            </div>
+            <div class="form-select-box">
+              <label>Historical Cancelled Alerts</label>
+              <select id="fraudCancelledAlerts">
+                <option value="0">0 False Alarms (Clean Record)</option>
+                <option value="1">1 Prior Cancelled Alert</option>
+                <option value="3">3+ Prior False Alarms (Suspicious)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-selects">
+            <div class="form-select-box">
+              <label>Prior Genuine Alerts</label>
+              <select id="fraudAlertHistory">
+                <option value="0">First Time User</option>
+                <option value="2">1-2 Prior Genuine Alerts</option>
+                <option value="5">5+ Prior Genuine Alerts</option>
+              </select>
+            </div>
+            <div class="form-select-box">
+              <label>Local Area Risk Level</label>
+              <select id="fraudAreaRisk">
+                <option value="medium">Medium Risk (Standard Street)</option>
+                <option value="high">High Crime Dark Spot (Plausible)</option>
+                <option value="low">Low Risk Gated Community</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="fraudDeviceRooted">
+              <span>Rooted / Jailbroken OS</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="fraudVpnActive">
+              <span>Active VPN / Proxy</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="fraudIsIsolated">
+              <span>Isolated Alleyway (Anti-Luring Check)</span>
+            </label>
+          </div>
+
+          <div class="anti-luring-alertbox" id="antiLuringNotice" style="display: none;">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Results & Gauge -->
+        <div class="fraud-results-panel">
+          <div class="gauge-card">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px;">
+              ML Computed Fraud Probability Score
+            </div>
+            <div class="gauge-score-huge" id="fraudScoreDisplay">0.12</div>
+            <div class="gauge-bar-track">
+              <div class="gauge-bar-fill" id="fraudGaugeFill"></div>
+            </div>
+            <div style="margin-top: 14px;">
+              <span class="rec-badge rec-immediate_broadcast" id="fraudRecBadge">IMMEDIATE BROADCAST</span>
+            </div>
+            <p id="fraudRationaleText" style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">
+              Ultra-low fraud probability. 90/10 rule applied: prioritize speed, alert all verified women in 200m radius instantly.
+            </p>
+          </div>
+
+          <div class="feature-overview-card">
+            <h4 style="font-size: 13px; color: var(--neon-cyan); margin-bottom: 10px;">Factor Influence Breakdown</h4>
+            <div id="fraudFactorList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: TECHNOVISION PITCH DECK ================= -->
+    <section class="view-panel" id="pitch-deck">
+      <div class="pitch-deck-container">
+        <div class="pitch-slider-wrapper">
+
+          <!-- Slide 1 -->
+          <div class="pitch-slide active">
+            <div class="slide-tag">Technovision 2026 • Problem Statement</div>
+            <h2 class="slide-title">The Dual Crisis: Street Harassment & Unreported Rural Domestic Violence</h2>
+            <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6;">
+              In urban centers, women walking alone face stalking and harassment where police arrive too late (15–25 min). In rural villages, domestic violence remains 100% unreported due to lack of smartphones, social stigma, and fear of retaliation from village panchayats.
+            </p>
+            <div class="slide-grid-2">
+              <div class="pitch-stat-box">
+                <div class="pitch-stat-huge">86%</div>
+                <p style="font-size: 13px; color: var(--text-muted);">Of women who faced street harassment report having no bystander intervention.</p>
+              </div>
+              <div class="pitch-stat-box">
+                <div class="pitch-stat-huge" style="color: var(--neon-cyan);">68%</div>
+                <p style="font-size: 13px; color: var(--text-muted);">Of rural Indian women do not own personal smartphones with app store access.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="pitch-slide">
+            <div class="slide-tag">Our Innovation • The Solution</div>
+            <h2 class="slide-title">Shakti Mesh: Peer-to-Peer Safety Mesh + Zero-Internet IVR Bridge</h2>
+            <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6;">
+              Shakti Mesh breaks the smartphone barrier. In cities, it creates an instant 200-meter peer-to-peer network of verified women commuters and shops. In rural areas, a silent missed call or disguised WhatsApp emoji alerts Anganwadi and ASHA leaders via cell-tower triangulation with zero digital footprints!
+            </p>
+            <div class="slide-grid-2">
+              <div class="pitch-stat-box">
+                <h4 style="color: var(--neon-cyan); font-size: 16px; margin-bottom: 6px;">🏙️ Urban Mesh</h4>
+                <p style="font-size: 12px; color: var(--text-muted);">Instant video call companion, remote distraction sirens, paired responder physical walk-ups.</p>
+              </div>
+              <div class="pitch-stat-box">
+                <h4 style="color: var(--safe-green); font-size: 16px; margin-bottom: 6px;">🌾 Rural IVR Bridge</h4>
+                <p style="font-size: 12px; color: var(--text-muted);">Works on ₹800 feature phones. Silent missed call to 1800-SHAKTI routes secretly to local female elders.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="pitch-slide">
+            <div class="slide-tag">Response Cascade • The 90/10 Rule</div>
+            <h2 class="slide-title">Balancing Life-Saving Speed with Anti-Scam Protection</h2>
+            <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6;">
+              Too strict verification means victims die waiting. Too loose means the system gets scammed. Our Adaptive Trust engine implements the 90/10 Rule: 90% of emergencies are genuine and dispatched in under 2 seconds. The remaining 10% anomalies are filtered through anti-luring pair mandates and post-facto verification.
+            </p>
+            <div class="slide-grid-2">
+              <div class="pitch-stat-box">
+                <h4 style="color: var(--warn-amber); font-size: 16px; margin-bottom: 6px;">Anti-Luring Protocol</h4>
+                <p style="font-size: 12px; color: var(--text-muted);">Isolated locations mandate police dispatch first + paired volunteer arrivals so helpers are never trapped.</p>
+              </div>
+              <div class="pitch-stat-box">
+                <h4 style="color: var(--emergency-red); font-size: 16px; margin-bottom: 6px;">Cross-Verification</h4>
+                <p style="font-size: 12px; color: var(--text-muted);">Multiple responders independently verify victim presence before closing incidents or logging reputation scores.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4 -->
+          <div class="pitch-slide">
+            <div class="slide-tag">Scalability & Business Model</div>
+            <h2 class="slide-title">Zero Cost for Women • Funded by MoWCD, CSR & Government Partnerships</h2>
+            <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6;">
+              Shakti Mesh is 100% free for all women. Operations are sustained through Ministry of Women and Child Development (MoWCD) bulk licensing, Corporate CSR safety grants, and B2B API integrations with rideshare operators (Ola, Uber, Rapido).
+            </p>
+            <div class="slide-grid-2">
+              <div class="pitch-stat-box">
+                <h4 style="color: var(--safe-green); font-size: 16px; margin-bottom: 6px;">ASHA Network Rollout</h4>
+                <p style="font-size: 12px; color: var(--text-muted);">Partnering with 1.3 million Anganwadi and ASHA workers as verified local community guardians.</p>
+              </div>
+              <div class="pitch-stat-box">
+                <h4 style="color: var(--neon-magenta); font-size: 16px; margin-bottom: 6px;">Emergency 112 CAD</h4>
+                <p style="font-size: 12px; color: var(--text-muted);">Direct XML/REST integration into state police command & dispatch systems for tier-3 escalation.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pitch Controls Bar -->
+        <div class="pitch-controls-bar">
+          <button class="scenario-btn" id="pitchPrevBtn">← Previous Slide</button>
+          <div class="pitch-dots-wrapper" id="pitchDotsContainer"></div>
+          <button class="scenario-btn" id="pitchNextBtn">Next Slide →</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Fullscreen Strobe Overlay for Loud Siren Mode -->
+  <div class="strobe-screen-overlay" id="strobeOverlay">
+    <div class="strobe-content-box">
+      <h2 style="font-size: 32px; font-weight: 900; letter-spacing: 2px;">🚨 EMERGENCY ALERT ACTIVE</h2>
+      <p style="font-size: 16px; margin-top: 10px;">HIGH DECIBEL CROWD ATTRACTOR • RECORDING LIVE</p>
+      <button class="btn-stop-strobe" onclick="window.shaktiApp.toggleStrobeSiren()">
+        Stop Siren & Strobe
+      </button>
+    </div>
+  </div>
+
+  <!-- Fake Call Modal -->
+  <div class="app-modal-backdrop" id="fakeCallModal">
+    <div class="modal-dialog-content" style="background: #000; padding: 0; overflow: hidden; height: 580px;">
+      <div class="fake-call-container" id="fakeCallContent">
+        <div class="caller-info">
+          <div class="caller-avatar">👨</div>
+          <h2>Papa ❤️</h2>
+          <p style="color: var(--text-dim); font-size: 13px;">Mobile</p>
+        </div>
+        <div style="font-size: 12px; color: var(--safe-green);">
+          <span>● Discreet Emergency Mode: Secretly Alerting Mesh</span>
+        </div>
+        <div class="call-actions-row">
+          <button class="call-btn-circle decline" id="declineFakeCallBtn" title="Decline">✕</button>
+          <button class="call-btn-circle accept" id="acceptFakeCallBtn" title="Accept">📞</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disguised Counselor Callback Modal (Domestic Violence) -->
+  <div class="app-modal-backdrop" id="counselorCallModal">
+    <div class="counselor-dialog-box">
+      <div style="font-size: 38px;">📦</div>
+      <h3 style="font-size: 18px; margin-top: 8px;">Incoming Call: BigBasket Delivery</h3>
+      <p style="font-size: 12px; color: var(--text-dim);">+91 80 4912 8490</p>
+      <div class="counselor-code-prompt">
+        <p><strong>Counselor speaks:</strong> "Hello ma'am, delivery for Priya. Is Priya there?"</p>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 16px;">
+        <button class="btn-resp-action danger" id="counselorWrongNumBtn" style="flex: 1;">
+          "Wrong Number" (Send Help Now)
+        </button>
+        <button class="btn-resp-action secondary" id="counselorSafeBtn" style="flex: 1;">
+          "Yes, speaking" (Safe to talk)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Companion Video Modal -->
+  <div class="app-modal-backdrop" id="companionVideoModal">
+    <div class="modal-dialog-content" style="background: #000; text-align: center; position: relative;">
+      <div style="position: absolute; top: 12px; right: 12px;">
+        <button id="closeCompanionVideoBtn" style="background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;">✕</button>
+      </div>
+      <div style="height: 300px; background: #111; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+        <div style="font-size: 54px; animation: pulse-dot 2s infinite;">👩</div>
+        <h4 style="color: var(--neon-cyan); margin-top: 10px;">Pooja V. (Companion Responder)</h4>
+        <p style="font-size: 11px; color: var(--safe-green);">Live WebRTC Video Stream Active</p>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px;">
+        "I'm on video with you now. Walk toward the Cafe Coffee Day on 100ft road, I'm wearing a yellow jacket and walking toward you!"
+      </p>
+    </div>
+  </div>
+
+  <!-- Watchdog Modal -->
+  <div class="app-modal-backdrop" id="watchdogModal">
+    <div class="modal-dialog-content" style="text-align: center;">
+      <h3 style="color: var(--warn-amber); font-size: 18px;">⏱️ Scheduled Walk Watchdog</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0;">
+        Check-in required upon reaching destination. If you do not check in, SOS triggers automatically!
+      </p>
+      <div style="font-size: 48px; font-family: var(--font-heading); font-weight: 800; color: var(--neon-cyan); margin: 14px 0;" id="watchdogTimeLeft">
+        45s
+      </div>
+      <button class="btn-resp-action primary" id="watchdogSafeCheckinBtn" style="width: 100%;">
+        ✓ I Have Arrived Safely (Disarm)
+      </button>
+    </div>
+  </div>
+
+  <!-- Arrival Verification Cross-Check Modal -->
+  <div class="app-modal-backdrop" id="arrivalCrossCheckModal">
+    <div class="modal-dialog-content">
+      <h3 style="font-size: 17px; color: var(--neon-cyan); margin-bottom: 8px;">
+        🛡️ Anti-Scam Arrival Cross-Check
+      </h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+        You have arrived at the scene. Please report your independent visual observation to verify the distress alert:
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-resp-action primary" id="arrivalVerifyConfirmBtn">
+          ✓ Yes, I see her and she needs assistance
+        </button>
+        <button class="btn-resp-action danger" id="arrivalVerifyNobodyBtn">
+          ✕ No, nobody is here (Potential False Alarm)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/fraud-engine.js"></script>
+  <script src="js/map-mesh.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/cascade.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,538 @@
+/* ==========================================================================
+   SHAKTI MESH - Mobile Frame & Phone Subscreens Styles
+   ========================================================================== */
+
+.smartphone-frame {
+  width: 380px;
+  height: 760px;
+  background: #000000;
+  border-radius: 48px;
+  border: 10px solid #1a2235;
+  box-shadow: 
+    0 0 0 2px #2d3748,
+    0 25px 50px -12px rgba(0, 0, 0, 0.9),
+    0 0 40px rgba(0, 240, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic Island / Notch */
+.phone-notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 26px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.notch-camera {
+  width: 10px;
+  height: 10px;
+  background: #0a0f1d;
+  border-radius: 50%;
+  border: 1px solid #1e293b;
+}
+
+.notch-sensor {
+  width: 6px;
+  height: 6px;
+  background: #0f172a;
+  border-radius: 50%;
+}
+
+/* Phone Status Bar */
+.phone-status-bar {
+  height: 44px;
+  padding: 10px 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  z-index: 40;
+}
+
+.phone-screen-body {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 18px 24px;
+}
+
+/* Submode Selector Tabs inside Phone */
+.submode-selector {
+  display: flex;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+  margin-bottom: 14px;
+}
+
+.submode-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submode-btn.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Phone Subscreens Switcher */
+.phone-subscreen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  animation: fadeIn 0.2s ease;
+}
+
+.phone-subscreen.active {
+  display: flex;
+}
+
+/* Banner */
+.status-banner {
+  background: rgba(0, 230, 118, 0.1);
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.status-banner.active-emergency {
+  background: rgba(255, 45, 85, 0.2);
+  border-color: var(--emergency-red);
+  color: #fff;
+}
+
+.banner-pulse {
+  width: 10px;
+  height: 10px;
+  background: var(--emergency-red);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--emergency-red);
+  animation: pulse-dot 1s infinite;
+}
+
+/* ================= Standard Street SOS Screen ================= */
+.sos-pulse-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 18px 0;
+  position: relative;
+}
+
+.main-sos-button {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff5277, #d40032 70%);
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 0 0 12px rgba(255, 45, 85, 0.25),
+    0 0 0 24px rgba(255, 45, 85, 0.12),
+    0 15px 35px rgba(255, 0, 50, 0.5);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: radar-sos 2.2s infinite ease-out;
+}
+
+.main-sos-button:active {
+  transform: scale(0.93);
+}
+
+@keyframes radar-sos {
+  0% { box-shadow: 0 0 0 0 rgba(255, 45, 85, 0.6), 0 0 0 10px rgba(255, 45, 85, 0.3); }
+  70% { box-shadow: 0 0 0 26px rgba(255, 45, 85, 0), 0 0 0 38px rgba(255, 45, 85, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 45, 85, 0), 0 0 0 0 rgba(255, 45, 85, 0); }
+}
+
+.sos-label-huge {
+  font-family: var(--font-heading);
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.sos-subtext {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+/* Quick Trigger Action Grid */
+.quick-trigger-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.trigger-tile {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 10px;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trigger-tile:hover {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: var(--neon-cyan);
+}
+
+.tile-icon {
+  font-size: 20px;
+}
+
+.tile-title {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tile-desc {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.btn-cancel-sos {
+  display: none;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 14px;
+  justify-content: center;
+}
+
+/* ================= Covert Calculator Disguise ================= */
+.calculator-screen-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.calc-display-area {
+  background: #000;
+  padding: 24px 16px 12px;
+  text-align: right;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.calc-digits {
+  font-family: var(--font-heading);
+  font-size: 46px;
+  color: #fff;
+  font-weight: 300;
+  line-height: 1.1;
+  word-break: break-all;
+}
+
+.calc-covert-dot {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.calc-covert-dot.pulse-active {
+  background: var(--safe-green);
+  box-shadow: 0 0 10px var(--safe-green);
+}
+
+.calc-keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.calc-btn {
+  background: #333333;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  font-size: 22px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.calc-btn:active {
+  background: #666;
+}
+
+.calc-btn.calc-fn {
+  background: #a5a5a5;
+  color: #000;
+}
+
+.calc-btn.calc-op {
+  background: #ff9f0a;
+  color: #fff;
+}
+
+.calc-btn.calc-zero {
+  grid-column: span 2;
+  aspect-ratio: auto;
+  border-radius: 36px;
+  justify-content: flex-start;
+  padding-left: 24px;
+}
+
+.covert-hint-bar {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.covert-hint-bar strong {
+  color: var(--neon-cyan);
+}
+
+.btn-quick-exit {
+  background: rgba(255, 45, 85, 0.15);
+  border: 1px solid var(--emergency-red);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ================= Rural Non-Internet Screen ================= */
+.rural-ivr-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rural-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.rural-card h4 {
+  font-size: 13px;
+  color: var(--warn-amber);
+  margin-bottom: 6px;
+}
+
+.btn-missed-call-dial {
+  background: linear-gradient(135deg, var(--warn-amber) 0%, #ff6d00 100%);
+  color: #000;
+  border: none;
+  font-weight: 800;
+  padding: 12px;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.whatsapp-emoji-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.whatsapp-coded-emoji {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 28px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.whatsapp-coded-emoji:hover {
+  transform: scale(1.15);
+  border-color: var(--safe-green);
+}
+
+/* ================= Innocent Weather Quick-Exit Screen ================= */
+.weather-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.weather-city {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.weather-temp {
+  font-size: 64px;
+  font-weight: 200;
+  line-height: 1;
+  margin: 10px 0;
+}
+
+.weather-condition {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.forecast-list {
+  width: 100%;
+  margin-top: 28px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.forecast-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.forecast-row:last-child {
+  border-bottom: none;
+}
+
+/* ================= Fake Call Interface Modal ================= */
+.fake-call-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.caller-info h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.caller-avatar {
+  width: 90px;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.call-actions-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.call-btn-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.call-btn-circle.decline {
+  background: var(--emergency-red);
+}
+
+.call-btn-circle.accept {
+  background: var(--safe-green);
+  animation: pulse-dot 1.5s infinite;
+}
+
+/* Counselor Modal */
+.counselor-dialog-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 18px;
+  padding: 24px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+}
+
+.counselor-code-prompt {
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px dashed var(--neon-cyan);
+  padding: 12px;
+  border-radius: 10px;
+  margin: 16px 0;
+  font-size: 13px;
+}
