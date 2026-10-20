@@ -1,4 +1,4 @@
-// Shakti Mesh - Covert Calculator Disguise
+// Sangini AI - Covert Calculator Disguise
 // Functional calculator with covert SOS trigger (911= or 112=) for domestic violence & home safety situations.
 
 class DisguiseCalculator {
@@ -124,8 +124,9 @@ class DisguiseCalculator {
     }
 
     // Trigger global covert alert in app
-    if (window.shaktiApp) {
-      window.shaktiApp.handleCovertTrigger({
+    const appInstance = window.sanginiApp || window.shaktiApp;
+    if (appInstance) {
+      appInstance.handleCovertTrigger({
         source: 'calculator_disguise',
         mode: 'domestic_violence_silent',
         privacyLevel: 'maximum_covert',

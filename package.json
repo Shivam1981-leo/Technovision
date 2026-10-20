@@ -1,7 +1,7 @@
 {
-  "name": "technovision-shakti-mesh",
+  "name": "sangini-ai",
   "version": "1.0.0",
-  "description": "Universal Women's Safety Mesh Network & Adaptive Response Platform",
+  "description": "Sangini AI - Universal Women's Safety Mesh Network & Adaptive Response Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

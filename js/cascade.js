@@ -1,4 +1,4 @@
-// Shakti Mesh - 4-Tier Response Cascade & Cryptographic Evidence Vault
+// Sangini AI - 4-Tier Response Cascade & Cryptographic Evidence Vault
 // Coordinates Tier 1 (0-2m) -> Tier 2 (2-10m) -> Tier 3 (112 Police) -> Tier 4 (Contacts), plus SHA-256 evidence anchoring.
 
 class ResponseCascadeManager {

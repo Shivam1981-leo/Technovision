@@ -1,7 +1,7 @@
-// Shakti Mesh - Main Application Controller
+// Sangini AI - Main Application Controller
 // Orchestrates navigation, crisis modes, responder matching, fraud simulator, and covert disguises.
 
-class ShaktiApp {
+class SanginiApp {
   constructor() {
     this.activeTab = 'victim-app';
     this.isSOSActive = false;
@@ -734,12 +734,12 @@ class ShaktiApp {
 
 // Global initialization
 window.addEventListener('DOMContentLoaded', () => {
-  window.shaktiApp = new ShaktiApp();
+  window.sanginiApp = window.shaktiApp = new SanginiApp();
 
   // Fake call buttons setup
   const acceptFakeBtn = document.getElementById('acceptFakeCallBtn');
   if (acceptFakeBtn) {
-    acceptFakeBtn.addEventListener('click', () => window.shaktiApp.acceptFakeCall());
+    acceptFakeBtn.addEventListener('click', () => window.sanginiApp.acceptFakeCall());
   }
 
   const declineFakeBtn = document.getElementById('declineFakeCallBtn');
@@ -755,37 +755,37 @@ window.addEventListener('DOMContentLoaded', () => {
   const counselorWrongNumBtn = document.getElementById('counselorWrongNumBtn');
   if (counselorWrongNumBtn) {
     counselorWrongNumBtn.addEventListener('click', () => {
-      window.shaktiApp.acceptCounselorCall('WRONG_NUMBER');
+      window.sanginiApp.acceptCounselorCall('WRONG_NUMBER');
     });
   }
 
   const counselorSafeBtn = document.getElementById('counselorSafeBtn');
   if (counselorSafeBtn) {
     counselorSafeBtn.addEventListener('click', () => {
-      window.shaktiApp.acceptCounselorCall('SAFE');
+      window.sanginiApp.acceptCounselorCall('SAFE');
     });
   }
 
   // Close companion video
   const closeVideoBtn = document.getElementById('closeCompanionVideoBtn');
   if (closeVideoBtn) {
-    closeVideoBtn.addEventListener('click', () => window.shaktiApp.closeCompanionVideoModal());
+    closeVideoBtn.addEventListener('click', () => window.sanginiApp.closeCompanionVideoModal());
   }
 
   // Watchdog Safe Button
   const watchdogSafeBtn = document.getElementById('watchdogSafeCheckinBtn');
   if (watchdogSafeBtn) {
-    watchdogSafeBtn.addEventListener('click', () => window.shaktiApp.checkinSafeWatchdog());
+    watchdogSafeBtn.addEventListener('click', () => window.sanginiApp.checkinSafeWatchdog());
   }
 
   // Arrival verification options
   const verifyConfirmBtn = document.getElementById('arrivalVerifyConfirmBtn');
   if (verifyConfirmBtn) {
-    verifyConfirmBtn.addEventListener('click', () => window.shaktiApp.submitArrivalCrossCheck('victim_confirmed_needs_help'));
+    verifyConfirmBtn.addEventListener('click', () => window.sanginiApp.submitArrivalCrossCheck('victim_confirmed_needs_help'));
   }
 
   const verifyNobodyBtn = document.getElementById('arrivalVerifyNobodyBtn');
   if (verifyNobodyBtn) {
-    verifyNobodyBtn.addEventListener('click', () => window.shaktiApp.submitArrivalCrossCheck('nobody_here'));
+    verifyNobodyBtn.addEventListener('click', () => window.sanginiApp.submitArrivalCrossCheck('nobody_here'));
   }
 });

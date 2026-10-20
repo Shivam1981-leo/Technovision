@@ -1,4 +1,4 @@
-// Web Audio API Synthesizer for Shakti Mesh
+// Web Audio API Synthesizer for Sangini AI
 // Generates realistic sirens, telephone rings, and alert pulses with zero external audio assets.
 
 class AudioManager {

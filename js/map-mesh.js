@@ -1,4 +1,4 @@
-// Shakti Mesh - Tactical Live Map & Peer-to-Peer Mesh Visualizer
+// Sangini AI - Tactical Live Map & Peer-to-Peer Mesh Visualizer
 // Renders 60 FPS animated radar rings, street grid, victim distress beacon, and live moving female responders.
 
 class MeshTacticalMap {

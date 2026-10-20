@@ -1,4 +1,4 @@
-// Shakti Mesh - Real-Time Fraud Detection & Adaptive Trust Engine
+// Sangini AI - Real-Time Fraud Detection & Adaptive Trust Engine
 // Implements Multi-Signal Machine Learning Scoring, Anti-Luring Safeguards, and Post-Alert Classification
 
 class FraudDetectionEngine {

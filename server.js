@@ -190,7 +190,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Shakti Mesh Safety Network running at http://localhost:${PORT}`);
+  console.log(`Sangini AI Safety Network running at http://localhost:${PORT}`);
 });
 
 module.exports = app;
