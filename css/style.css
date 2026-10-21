@@ -172,6 +172,12 @@ body {
   max-width: 900px;
   width: 100%;
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-tabs-wrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-tab-btn {
@@ -924,3 +930,450 @@ body {
   width: 90%;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
 }
+
+/* ==========================================================================
+   JURY TESTING CONSOLE BAR (TACTICAL TERMINAL)
+   ========================================================================== */
+.jury-console-wrapper {
+  background: linear-gradient(180deg, rgba(10, 16, 30, 0.98) 0%, rgba(6, 10, 20, 0.95) 100%);
+  border-bottom: 2px solid rgba(0, 240, 255, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(0, 240, 255, 0.2);
+  padding: 12px 24px;
+  position: relative;
+  z-index: 95;
+}
+
+.jury-console-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jury-console-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jury-prompt-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--neon-cyan);
+  letter-spacing: 0.5px;
+}
+
+.jury-pulse-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  animation: pulse-dot 1.5s infinite;
+}
+
+.jury-cmd-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(0, 240, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.jury-status-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.jury-status-pill {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: var(--text-muted);
+}
+
+.jury-console-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 4px 6px 4px 14px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 240, 255, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.jury-console-input-row:focus-within {
+  border-color: var(--neon-cyan);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.jury-input-prefix {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  user-select: none;
+}
+
+.jury-input-field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  outline: none;
+  padding: 8px 4px;
+}
+
+.jury-input-field::placeholder {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.btn-jury-execute {
+  background: linear-gradient(135deg, var(--neon-cyan) 0%, #0099ff 100%);
+  color: #050a14;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+}
+
+.btn-jury-execute:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.45);
+  filter: brightness(1.1);
+}
+
+.btn-jury-execute:active {
+  transform: translateY(1px);
+}
+
+.jury-presets-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.jury-presets-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.jury-chip-btn {
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: #e2e8f0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.jury-chip-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: var(--neon-cyan);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 240, 255, 0.25);
+}
+
+.jury-chip-btn.home {
+  background: rgba(224, 36, 195, 0.08);
+  border-color: rgba(224, 36, 195, 0.3);
+  color: #f1f5f9;
+}
+
+.jury-chip-btn.home:hover {
+  background: rgba(224, 36, 195, 0.25);
+  border-color: var(--neon-magenta);
+  box-shadow: 0 2px 8px rgba(224, 36, 195, 0.3);
+}
+
+.jury-chip-btn.audible {
+  background: rgba(255, 45, 85, 0.08);
+  border-color: rgba(255, 45, 85, 0.3);
+}
+
+.jury-chip-btn.audible:hover {
+  background: rgba(255, 45, 85, 0.2);
+  border-color: var(--emergency-red);
+}
+
+.jury-chip-btn.accept {
+  background: rgba(0, 230, 118, 0.08);
+  border-color: rgba(0, 230, 118, 0.3);
+  color: var(--safe-green);
+  font-weight: 600;
+}
+
+.jury-chip-btn.accept:hover {
+  background: rgba(0, 230, 118, 0.22);
+  border-color: var(--safe-green);
+  box-shadow: 0 2px 8px rgba(0, 230, 118, 0.3);
+}
+
+.jury-chip-btn.reset {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.2);
+  color: var(--text-dim);
+}
+
+.jury-chip-btn.reset:hover {
+  background: rgba(148, 163, 184, 0.2);
+  color: #fff;
+}
+
+.jury-console-output {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.45);
+  border-left: 3px solid var(--neon-cyan);
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.jury-console-output.success {
+  border-left-color: var(--safe-green);
+  color: #a7f3d0;
+  background: rgba(0, 230, 118, 0.06);
+}
+
+.jury-console-output.error {
+  border-left-color: var(--emergency-red);
+  color: #fca5a5;
+  background: rgba(255, 45, 85, 0.08);
+}
+
+/* ==========================================================================
+   60-SECOND INCIDENT COUNTDOWN TIMER WIDGET
+   ========================================================================== */
+.incident-timer-widget-card {
+  background: linear-gradient(135deg, rgba(14, 21, 38, 0.9) 0%, rgba(20, 28, 52, 0.9) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.timer-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.timer-widget-header strong {
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.timer-badge-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  margin-right: 8px;
+  animation: pulse-dot 1.2s infinite;
+}
+
+.timer-big-display {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+.timer-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 10px;
+}
+
+.timer-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--safe-green) 0%, var(--neon-cyan) 100%);
+  border-radius: 999px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.timer-widget-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   APPEND-ONLY INCIDENT EVENT LOG SECTION
+   ========================================================================== */
+.event-log-section-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.event-log-container {
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-top: 10px;
+}
+
+.event-log-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.event-log-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.event-log-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.25);
+  border-radius: 3px;
+}
+
+.event-log-entry {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.event-log-entry:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   INTEGRATION STUBS
+   ========================================================================== */
+.stub-card {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  transition: border-color 0.2s;
+}
+
+.stub-card:hover {
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+.stub-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.stub-badge.standby {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text-dim);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.stub-badge.active-red {
+  background: rgba(255, 45, 85, 0.18);
+  color: var(--emergency-red);
+  border: 1px solid var(--emergency-red);
+  box-shadow: 0 0 8px rgba(255, 45, 85, 0.3);
+}
+
+.stub-badge.active-magenta {
+  background: rgba(224, 36, 195, 0.18);
+  color: var(--neon-magenta);
+  border: 1px solid var(--neon-magenta);
+  box-shadow: 0 0 8px rgba(224, 36, 195, 0.3);
+}
+
+.stub-badge.active-green {
+  background: rgba(0, 230, 118, 0.18);
+  color: var(--safe-green);
+  border: 1px solid var(--safe-green);
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.3);
+}
+
+/* Status Banner states */
+.status-banner.home-discreet {
+  background: rgba(224, 36, 195, 0.12);
+  border-color: var(--neon-magenta);
+  color: #fff;
+}
+
+.status-banner.accepted-safe {
+  background: rgba(0, 230, 118, 0.12);
+  border-color: var(--safe-green);
+  color: #fff;
+}
+
+.tier-indicator.tier-safe {
+  background: rgba(0, 230, 118, 0.15);
+  border: 1px solid var(--safe-green);
+  color: var(--safe-green);
+}
+
+.pulsing-border {
+  animation: pulse-border-cyan 1.5s infinite;
+}
+
+.escalated-border {
+  animation: pulse-border-amber 1.5s infinite;
+}
+
+@keyframes pulse-border-cyan {
+  0%, 100% { border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+  50% { border-color: rgba(0, 240, 255, 1); box-shadow: 0 0 25px rgba(0, 240, 255, 0.45); }
+}
+
+@keyframes pulse-border-amber {
+  0%, 100% { border-color: rgba(255, 179, 0, 0.4); box-shadow: 0 0 10px rgba(255, 179, 0, 0.2); }
+  50% { border-color: rgba(255, 179, 0, 1); box-shadow: 0 0 25px rgba(255, 179, 0, 0.45); }
+}
+

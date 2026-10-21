@@ -1,44 +1,297 @@
 // Sangini AI - Main Application Controller
-// Orchestrates navigation, crisis modes, responder matching, fraud simulator, and covert disguises.
+// Orchestrates:
+// 1. One-Line Jury Console (SG|... & OK|... commands)
+// 2. Append-Only Incident Event Log Engine & 60-Second Real-Time Countdown
+// 3. Location-Based Response Routing (Street = Peer Mesh Radar | Home = Discreet Confidential Path)
+// 4. Silent Mode Enforcement (silent 1 = quiet alarm, silent 0 = audible)
+// 5. Existing SOS triggers, Covert Calculator disguise, AI Fraud Engine & Evidence Vault.
 
 class SanginiApp {
   constructor() {
     this.activeTab = 'victim-app';
-    this.isSOSActive = false;
-    this.activeAlert = null;
     this.tapPowerCount = 0;
     this.tapPowerTimer = null;
     this.watchdogTimer = null;
-    this.watchdogRemaining = 90; // seconds
+    this.watchdogRemaining = 45;
 
     this.init();
   }
 
   init() {
     this.bindNavigation();
+    this.bindJuryConsole();
     this.bindVictimTriggers();
     this.bindResponderActions();
     this.bindFraudControls();
     this.bindDisguiseModes();
     this.bindPitchDeck();
+    this.subscribeToEventLog();
 
-    // Initialize map after DOM ready
+    // Initialize radar map after DOM ready
     setTimeout(() => {
-      window.tacticalMap = new window.MeshTacticalMap('tacticalMeshCanvas');
-      this.runFraudEvaluation(); // initial run
+      if (!window.tacticalMap && window.MeshTacticalMap) {
+        window.tacticalMap = new window.MeshTacticalMap('tacticalMeshCanvas');
+      }
+      this.runFraudEvaluation();
     }, 200);
 
-    // Mute toggle
+    // Audio Mute toggle
     const muteBtn = document.getElementById('audioMuteBtn');
     if (muteBtn) {
       muteBtn.addEventListener('click', () => {
-        const isMuted = window.soundEngine.toggleMute();
+        const isMuted = window.soundEngine ? window.soundEngine.toggleMute() : true;
         muteBtn.innerHTML = isMuted ? '🔇 Audio Muted' : '🔊 Audio Active';
         muteBtn.classList.toggle('muted', isMuted);
       });
     }
   }
 
+  // Subscribe directly to the Append-Only Incident Event Log
+  subscribeToEventLog() {
+    if (window.incidentEventLogManager) {
+      window.incidentEventLogManager.subscribe((incident, event) => {
+        this.onIncidentStateChange(incident, event);
+      });
+      const current = window.incidentEventLogManager.getActiveIncident();
+      if (current) this.onIncidentStateChange(current, null);
+    } else {
+      setTimeout(() => this.subscribeToEventLog(), 150);
+    }
+  }
+
+  // Handle Event Log state updates
+  onIncidentStateChange(incident, event) {
+    if (!incident) return;
+
+    // Update Console Bar Indicators
+    this.updateConsoleBarStatus(incident);
+
+    // Update Victim UI Banner
+    this.updateVictimStatusBanner(incident);
+
+    // Update Responder Alert Sidebar
+    this.updateResponderSidebar(incident);
+
+    // Enforce Silent Mode: when silent is set to 1, the alarm must remain quiet
+    if (incident.status === 'active' || incident.status === 'escalated') {
+      if (incident.silent === 1) {
+        // Quiet mode: stop any loud sirens or chirps
+        if (window.soundEngine) window.soundEngine.stopSiren();
+      } else {
+        // Audible mode
+        if (event && event.type === 'Triggered' && window.soundEngine) {
+          window.soundEngine.playAlertChirp();
+        }
+      }
+    }
+  }
+
+  updateConsoleBarStatus(incident) {
+    const ctxPill = document.getElementById('juryStatusContext');
+    const radarPill = document.getElementById('juryStatusRadar');
+    const timerPill = document.getElementById('juryStatusTimer');
+    const codePill = document.getElementById('juryStatusCode');
+    const silentPill = document.getElementById('juryStatusSilent');
+
+    if (!incident || incident.status === 'idle') {
+      if (ctxPill) ctxPill.innerHTML = `Context: <strong style="color: var(--text-dim);">STANDBY</strong>`;
+      if (radarPill) radarPill.innerHTML = `Peer Radar: <strong style="color: var(--safe-green);">READY</strong>`;
+      if (timerPill) timerPill.innerHTML = `60s Timer: <strong style="color: var(--text-dim);">--</strong>`;
+      if (codePill) codePill.innerHTML = `Code: <strong style="color: var(--neon-cyan);">BLUE</strong>`;
+      if (silentPill) silentPill.innerHTML = `Mode: <strong style="color: var(--text-dim);">STANDBY</strong>`;
+      return;
+    }
+
+    if (ctxPill) {
+      const isHome = incident.context === 'home';
+      ctxPill.innerHTML = `Context: <strong style="color: ${isHome ? 'var(--neon-magenta)' : 'var(--neon-cyan)'};">${incident.context.toUpperCase()}</strong>`;
+    }
+
+    if (radarPill) {
+      if (incident.context === 'home' || !incident.peerRadarVisible) {
+        radarPill.innerHTML = `Peer Radar: <strong style="color: var(--neon-magenta);">🔒 HIDDEN (DISCREET)</strong>`;
+      } else {
+        radarPill.innerHTML = `Peer Radar: <strong style="color: var(--emergency-red);">📡 BROADCASTING</strong>`;
+      }
+    }
+
+    if (timerPill) {
+      if (incident.status === 'accepted') {
+        timerPill.innerHTML = `60s Timer: <strong style="color: var(--safe-green);">✓ ACCEPTED</strong>`;
+      } else if (incident.status === 'escalated') {
+        timerPill.innerHTML = `60s Timer: <strong style="color: var(--emergency-red);">TIMEOUT (TIER 2)</strong>`;
+      } else {
+        timerPill.innerHTML = `60s Timer: <strong style="color: ${incident.timeRemaining <= 15 ? 'var(--emergency-red)' : 'var(--neon-cyan)'};">${incident.timeRemaining}s</strong>`;
+      }
+    }
+
+    if (codePill) {
+      codePill.innerHTML = `Code: <strong style="color: var(--neon-cyan);">${incident.shortCode}</strong>`;
+    }
+
+    if (silentPill) {
+      silentPill.innerHTML = incident.silent === 1
+        ? `Alarm: <strong style="color: var(--warn-amber);">🔇 SILENT (QUIET)</strong>`
+        : `Alarm: <strong style="color: var(--emergency-red);">🔊 AUDIBLE</strong>`;
+    }
+  }
+
+  updateVictimStatusBanner(incident) {
+    const statusBanner = document.getElementById('victimStatusBanner');
+    const cancelBtn = document.getElementById('cancelSosBtn');
+
+    if (!statusBanner) return;
+
+    if (!incident || incident.status === 'idle') {
+      statusBanner.className = 'status-banner ready-standby';
+      statusBanner.innerHTML = `
+        <div class="banner-pulse" style="background: var(--safe-green); box-shadow: 0 0 10px var(--safe-green);"></div>
+        <div>
+          <strong>PROTECTION ACTIVE • 34 RESPONDERS NEARBY</strong>
+          <p>High Accuracy GPS Locked • Mesh Relay Ready • Standby</p>
+        </div>
+      `;
+      if (cancelBtn) cancelBtn.style.display = 'none';
+      return;
+    }
+
+    if (cancelBtn) cancelBtn.style.display = 'inline-flex';
+
+    if (incident.status === 'accepted') {
+      statusBanner.className = 'status-banner accepted-safe';
+      statusBanner.innerHTML = `
+        <div class="banner-pulse" style="background: var(--safe-green); box-shadow: 0 0 14px var(--safe-green);"></div>
+        <div>
+          <strong style="color: var(--safe-green);">🤝 RESPONDER EN ROUTE (${incident.responders[0]?.name || 'R12'})</strong>
+          <p>Accepted with Verification Code [${incident.shortCode}]. Keep phone in hand.</p>
+        </div>
+      `;
+    } else if (incident.status === 'escalated') {
+      statusBanner.className = 'status-banner active-emergency';
+      statusBanner.innerHTML = `
+        <div class="banner-pulse" style="background: var(--warn-amber); box-shadow: 0 0 14px var(--warn-amber);"></div>
+        <div>
+          <strong style="color: var(--warn-amber);">⚡ TIER 2 ESCALATION ENGAGED (60s Timeout)</strong>
+          <p>Community Patrols & Police 112 Gateway Alerted with Cryptographic Evidence Hash.</p>
+        </div>
+      `;
+    } else if (incident.context === 'home') {
+      // Home incident discreet mode
+      statusBanner.className = 'status-banner home-discreet';
+      statusBanner.innerHTML = `
+        <div class="banner-pulse" style="background: var(--neon-magenta); box-shadow: 0 0 14px var(--neon-magenta);"></div>
+        <div>
+          <strong style="color: var(--neon-magenta);">🔒 DISCREET HOME PROTOCOL ACTIVE (PEER RADAR BLOCKED)</strong>
+          <p>Zero public alarm • Routed secretly to verified female counselor. Alarm is silent.</p>
+        </div>
+      `;
+    } else {
+      // Street incident active mode
+      statusBanner.className = 'status-banner active-emergency';
+      statusBanner.innerHTML = `
+        <div class="banner-pulse"></div>
+        <div>
+          <strong>🚨 SOS TRANSMITTED (${incident.context.toUpperCase()} • TIER 1 MESH ACTIVE)</strong>
+          <p>Alert broadcast to 4 verified female peers in 200m. 60s Acceptance countdown running.</p>
+        </div>
+      `;
+    }
+  }
+
+  updateResponderSidebar(incident) {
+    const cardTitle = document.getElementById('respAlertTitle');
+    const cardType = document.getElementById('respAlertType');
+    const cardDist = document.getElementById('respAlertDist');
+    const walkOverBtn = document.getElementById('respWalkOverBtn');
+
+    if (!cardTitle) return;
+
+    if (!incident || incident.status === 'idle') {
+      cardTitle.innerText = "NO ACTIVE DISTRESS ALERT";
+      if (cardType) cardType.innerText = "System in standby patrol scan";
+      if (cardDist) cardDist.innerText = "0 active alerts in 200m range";
+      if (walkOverBtn) {
+        walkOverBtn.disabled = true;
+        walkOverBtn.innerHTML = "🚶‍♀️ Standby (No Active Alert)";
+      }
+      return;
+    }
+
+    if (walkOverBtn) {
+      walkOverBtn.disabled = false;
+      if (incident.status === 'accepted') {
+        walkOverBtn.innerHTML = `🚶‍♀️ En Route (Accepted as R12 - Code ${incident.shortCode})`;
+        walkOverBtn.disabled = true;
+      } else {
+        walkOverBtn.innerHTML = `🚶‍♀️ Accept as R12 (OK|R12|${incident.shortCode})`;
+      }
+    }
+
+    if (incident.context === 'home' || !incident.peerRadarVisible) {
+      cardTitle.innerHTML = `<span style="color: var(--neon-magenta);">🔒 HOME DISCREET ALERT (CONFIDENTIAL)</span>`;
+      if (cardType) cardType.innerHTML = `Peer radar broadcast: <strong style="color: var(--neon-magenta);">SUPPRESSED</strong> (Victim Safety)`;
+      if (cardDist) cardDist.innerHTML = `Direct Confidential Counselor Dispatch • Code: <strong>${incident.shortCode}</strong>`;
+    } else {
+      cardTitle.innerText = `${incident.context.toUpperCase()} HARASSMENT ALERT (${incident.id})`;
+      if (cardType) cardType.innerText = `Trigger: ${incident.events[0]?.triggerMethod || 'Jury Console'} • Lat: ${incident.coords.lat}, Lon: ${incident.coords.lon}`;
+      if (cardDist) cardDist.innerText = `140m away • Verification Code: [${incident.shortCode}]`;
+    }
+  }
+
+  // =========================================================================
+  // JURY TESTING CONSOLE BINDINGS
+  // =========================================================================
+  bindJuryConsole() {
+    const input = document.getElementById('juryConsoleInput');
+    const submitBtn = document.getElementById('juryConsoleSubmitBtn');
+    const outputEl = document.getElementById('juryConsoleOutput');
+
+    const executeCommand = (cmdText) => {
+      if (!cmdText || !window.incidentEventLogManager) return;
+      const res = window.incidentEventLogManager.parseAndExecuteCommand(cmdText);
+
+      if (outputEl) {
+        outputEl.innerText = res.message;
+        outputEl.className = res.success ? 'jury-console-output success' : 'jury-console-output error';
+      }
+
+      this.showToast(res.message);
+
+      // Best effort send to server API
+      if (window.fetch) {
+        fetch('/api/console-command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: cmdText })
+        }).catch(() => {});
+      }
+    };
+
+    if (submitBtn && input) {
+      submitBtn.addEventListener('click', () => {
+        executeCommand(input.value);
+        input.value = '';
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          executeCommand(input.value);
+          input.value = '';
+        }
+      });
+    }
+
+    // Quick-Preset Chips for Jury
+    document.querySelectorAll('.jury-chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cmd = btn.dataset.cmd;
+        if (input) input.value = cmd;
+        executeCommand(cmd);
+      });
+    });
+  }
+
+  // Navigation
   bindNavigation() {
     const tabs = document.querySelectorAll('.nav-tab-btn');
     tabs.forEach(btn => {
@@ -67,16 +320,22 @@ class SanginiApp {
     }
   }
 
+  // Victim Smartphone Triggers
   bindVictimTriggers() {
-    // 1. Big SOS Button
+    // 1. Big SOS Button (Opens incident with street context)
     const mainSosBtn = document.getElementById('mainSosPulseBtn');
     if (mainSosBtn) {
       mainSosBtn.addEventListener('click', () => {
-        this.triggerEmergencySOS({
-          type: 'street_harassment',
-          triggerMethod: 'main_pulse_button',
-          context: 'street'
-        });
+        if (window.incidentEventLogManager) {
+          window.incidentEventLogManager.triggerIncident({
+            context: 'street',
+            lat: 18.5204,
+            lon: 73.8567,
+            silent: 0,
+            shortCode: 'BLUE',
+            triggerMethod: 'main_pulse_button'
+          });
+        }
       });
     }
 
@@ -86,11 +345,16 @@ class SanginiApp {
       shakeBtn.addEventListener('click', () => {
         shakeBtn.classList.add('shaking-active');
         setTimeout(() => shakeBtn.classList.remove('shaking-active'), 800);
-        this.triggerEmergencySOS({
-          type: 'street_harassment',
-          triggerMethod: 'shake_pattern_3x',
-          context: 'street_movement'
-        });
+        if (window.incidentEventLogManager) {
+          window.incidentEventLogManager.triggerIncident({
+            context: 'street',
+            lat: 18.5204,
+            lon: 73.8567,
+            silent: 0,
+            shortCode: 'BLUE',
+            triggerMethod: 'shake_pattern_3x'
+          });
+        }
       });
     }
 
@@ -109,11 +373,16 @@ class SanginiApp {
         if (this.tapPowerCount >= 5) {
           this.tapPowerCount = 0;
           powerBtn.innerText = '⚡ TRIGGERED!';
-          this.triggerEmergencySOS({
-            type: 'street_harassment',
-            triggerMethod: 'power_button_5x',
-            context: 'rapid_panic'
-          });
+          if (window.incidentEventLogManager) {
+            window.incidentEventLogManager.triggerIncident({
+              context: 'street',
+              lat: 18.5204,
+              lon: 73.8567,
+              silent: 0,
+              shortCode: 'BLUE',
+              triggerMethod: 'power_button_5x'
+            });
+          }
         }
       });
     }
@@ -125,11 +394,16 @@ class SanginiApp {
         voiceBtn.innerHTML = '🎙️ <em>Listening: "Hey Safety, Emergency"...</em>';
         setTimeout(() => {
           voiceBtn.innerHTML = '🎙️ "Hey Safety, Emergency" (Detected)';
-          this.triggerEmergencySOS({
-            type: 'street_harassment',
-            triggerMethod: 'voice_command_emergency',
-            context: 'hands_free'
-          });
+          if (window.incidentEventLogManager) {
+            window.incidentEventLogManager.triggerIncident({
+              context: 'street',
+              lat: 18.5204,
+              lon: 73.8567,
+              silent: 0,
+              shortCode: 'BLUE',
+              triggerMethod: 'voice_command_emergency'
+            });
+          }
           setTimeout(() => {
             voiceBtn.innerHTML = '🎙️ Voice SOS ("Hey Safety")';
           }, 2500);
@@ -165,98 +439,37 @@ class SanginiApp {
     const cancelSosBtn = document.getElementById('cancelSosBtn');
     if (cancelSosBtn) {
       cancelSosBtn.addEventListener('click', () => {
-        this.cancelSOS();
+        if (window.incidentEventLogManager) {
+          window.incidentEventLogManager.parseAndExecuteCommand('RESET');
+        }
+        if (window.soundEngine) window.soundEngine.stopSiren();
+        const strobeOverlay = document.getElementById('strobeOverlay');
+        if (strobeOverlay) strobeOverlay.classList.remove('active');
+        this.showToast("✅ Incident Reset safely. Ready for new commands.");
       });
     }
   }
 
-  triggerEmergencySOS(details) {
-    if (window.soundEngine) window.soundEngine.playAlertChirp();
-
-    this.isSOSActive = true;
-    this.activeAlert = {
-      id: `ALT-${Math.floor(1000 + Math.random() * 9000)}`,
-      timestamp: new Date().toLocaleTimeString(),
-      status: 'active',
-      ...details
-    };
-
-    // Update Victim UI banner
-    const statusBanner = document.getElementById('victimStatusBanner');
-    if (statusBanner) {
-      statusBanner.className = 'status-banner active-emergency';
-      statusBanner.innerHTML = `
-        <div class="banner-pulse"></div>
-        <div>
-          <strong>🚨 SOS TRANSMITTED (Mesh Tier 1 Active)</strong>
-          <p>Silent encrypted alert sent to 4 verified women within 200m. Cloud recording live.</p>
-        </div>
-      `;
-    }
-
-    const cancelBtn = document.getElementById('cancelSosBtn');
-    if (cancelBtn) cancelBtn.style.display = 'inline-flex';
-
-    // Start 4-tier Cascade
-    if (window.cascadeManager) {
-      window.cascadeManager.startCascade(this.activeAlert);
-    }
-
-    // Notify Responder Map
-    this.updateResponderAlertCard(this.activeAlert);
-
-    // Show floating toast
-    this.showToast("🚨 Alert Broadcast: Verified female responders in 200m notified!");
-  }
-
+  // Covert trigger (e.g. from Covert Calculator 911= or Rural IVR)
   handleCovertTrigger(details) {
-    this.triggerEmergencySOS({
-      type: 'domestic_violence_covert',
-      triggerMethod: details.source,
-      context: 'residential_covert',
-      privacyLevel: 'maximum'
-    });
-
-    // For DV covert, do NOT make sound! Ensure silent
-    if (window.soundEngine) {
-      window.soundEngine.stopSiren();
+    if (window.incidentEventLogManager) {
+      window.incidentEventLogManager.triggerIncident({
+        context: 'home',
+        lat: 18.5204,
+        lon: 73.8567,
+        silent: 1, // discreet home mode MUST remain quiet
+        shortCode: 'BLUE',
+        triggerMethod: details.source || 'calculator_disguise'
+      });
     }
 
-    this.showToast("🔒 Covert SOS Dispatched: Routed silently to verified female counselor & local NGO.");
+    if (window.soundEngine) window.soundEngine.stopSiren();
+    this.showToast("🔒 Covert SOS Dispatched: Routed silently to verified female counselor. Hidden from peer radar.");
 
-    // Trigger Masked Counselor Callback after 4 seconds to demonstrate safe telemarketer cover!
+    // Trigger Masked Counselor Callback after 4 seconds
     setTimeout(() => {
       this.triggerCounselorCall();
     }, 4000);
-  }
-
-  cancelSOS() {
-    this.isSOSActive = false;
-    this.activeAlert = null;
-
-    if (window.cascadeManager) window.cascadeManager.reset();
-    if (window.tacticalMap) window.tacticalMap.resetPositions();
-    if (window.soundEngine) window.soundEngine.stopSiren();
-
-    const strobeOverlay = document.getElementById('strobeOverlay');
-    if (strobeOverlay) strobeOverlay.classList.remove('active');
-
-    const statusBanner = document.getElementById('victimStatusBanner');
-    if (statusBanner) {
-      statusBanner.className = 'status-banner ready-standby';
-      statusBanner.innerHTML = `
-        <div class="banner-dot green"></div>
-        <div>
-          <strong>PROTECTION ACTIVE • 34 RESPONDERS NEARBY</strong>
-          <p>High Accuracy GPS Locked • Mesh Relay Ready</p>
-        </div>
-      `;
-    }
-
-    const cancelBtn = document.getElementById('cancelSosBtn');
-    if (cancelBtn) cancelBtn.style.display = 'none';
-
-    this.showToast("✅ Alert Cancelled safely. Cloud session archived.");
   }
 
   toggleStrobeSiren() {
@@ -279,12 +492,16 @@ class SanginiApp {
     fakeCallModal.classList.add('active');
     if (window.soundEngine) window.soundEngine.startRingtone();
 
-    // Secretly arm silent SOS in the background
-    this.triggerEmergencySOS({
-      type: 'street_harassment',
-      triggerMethod: 'fake_call_screen',
-      context: 'deterrent_call'
-    });
+    if (window.incidentEventLogManager) {
+      window.incidentEventLogManager.triggerIncident({
+        context: 'street',
+        lat: 18.5204,
+        lon: 73.8567,
+        silent: 1,
+        shortCode: 'BLUE',
+        triggerMethod: 'fake_call_screen'
+      });
+    }
   }
 
   acceptFakeCall() {
@@ -336,9 +553,10 @@ class SanginiApp {
     const counselorModal = document.getElementById('counselorCallModal');
 
     if (responseCode === 'WRONG_NUMBER') {
-      // Secret Code: "Wrong Number" means SEND HELP IMMEDIATELY
       this.showToast("🚨 Secret Code Verified ('Wrong Number'): Female Counselor & Police Rapid Unit Dispatched to Home Address!");
-      if (window.cascadeManager) window.cascadeManager.escalateToTier2();
+      if (window.incidentEventLogManager) {
+        window.incidentEventLogManager.escalateIncident("Domestic Violence Secret Code Verified");
+      }
     } else {
       this.showToast("ℹ️ Safe Check-in Confirmed: Counselor initiating silent safety planning protocol.");
     }
@@ -351,7 +569,7 @@ class SanginiApp {
     if (!watchdogModal) return;
 
     watchdogModal.classList.add('active');
-    this.watchdogRemaining = 45; // 45 sec demo
+    this.watchdogRemaining = 45;
     const timeEl = document.getElementById('watchdogTimeLeft');
 
     clearInterval(this.watchdogTimer);
@@ -362,11 +580,16 @@ class SanginiApp {
       if (this.watchdogRemaining <= 0) {
         clearInterval(this.watchdogTimer);
         watchdogModal.classList.remove('active');
-        this.triggerEmergencySOS({
-          type: 'travel_watchdog_timeout',
-          triggerMethod: 'failed_eta_checkin',
-          context: 'unfamiliar_walk'
-        });
+        if (window.incidentEventLogManager) {
+          window.incidentEventLogManager.triggerIncident({
+            context: 'travel',
+            lat: 18.5204,
+            lon: 73.8567,
+            silent: 0,
+            shortCode: 'BLUE',
+            triggerMethod: 'failed_eta_checkin'
+          });
+        }
         this.showToast("⚠️ Watchdog ETA Expired: Auto-alerting nearby female mesh and emergency contacts!");
       }
     }, 1000);
@@ -380,7 +603,6 @@ class SanginiApp {
   }
 
   bindDisguiseModes() {
-    // Sub-mode tabs inside Victim phone: Standard SOS | Calculator Disguise | Rural IVR | Trip Guard
     const subModeBtns = document.querySelectorAll('.submode-btn');
     subModeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -394,7 +616,6 @@ class SanginiApp {
       });
     });
 
-    // Calculator buttons
     const calcBtns = document.querySelectorAll('.calc-btn');
     calcBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -405,11 +626,9 @@ class SanginiApp {
       });
     });
 
-    // Covert Quick-Exit Button
     const quickExitBtns = document.querySelectorAll('.btn-quick-exit');
     quickExitBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Swap to neutral screen
         document.querySelectorAll('.phone-subscreen').forEach(s => s.classList.remove('active'));
         const weatherScreen = document.getElementById('subscreen-innocent-weather');
         if (weatherScreen) weatherScreen.classList.add('active');
@@ -417,53 +636,49 @@ class SanginiApp {
       });
     });
 
-    // Rural IVR Missed Call trigger demo
     const ruralMissedCallBtn = document.getElementById('triggerRuralMissedCallBtn');
     if (ruralMissedCallBtn) {
       ruralMissedCallBtn.addEventListener('click', () => {
         this.handleCovertTrigger({
           source: 'rural_ivr_missed_call',
-          mode: 'feature_phone_silent',
-          priorityResponders: ['anganwadi_worker', 'asha_supervisor', 'local_ngo']
+          mode: 'feature_phone_silent'
         });
       });
     }
 
-    // Rural WhatsApp Emoji trigger demo
     const ruralEmojiBtns = document.querySelectorAll('.whatsapp-coded-emoji');
     ruralEmojiBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const emoji = btn.innerText;
         this.handleCovertTrigger({
           source: `whatsapp_coded_emoji_${emoji}`,
-          mode: 'chat_emoji_trigger',
-          priorityResponders: ['trusted_contact', 'dv_counselor']
+          mode: 'chat_emoji_trigger'
         });
       });
     });
   }
 
   bindResponderActions() {
-    // "I'm Walking Over" button
+    // "I'm Walking Toward Her Location" -> Executes OK|R12|BLUE
     const walkOverBtn = document.getElementById('respWalkOverBtn');
     if (walkOverBtn) {
       walkOverBtn.addEventListener('click', () => {
-        if (window.tacticalMap) {
-          window.tacticalMap.startEnRouteAnimation();
+        if (window.incidentEventLogManager) {
+          const res = window.incidentEventLogManager.acceptIncident('R12', 'BLUE');
+          if (res.success) {
+            walkOverBtn.innerHTML = '🚶‍♀️ En Route (Accepted as R12 - 140m)';
+            walkOverBtn.disabled = true;
+            this.showToast("🤝 Acceptance Verified: Responder R12 en route with verification code BLUE!");
+            setTimeout(() => {
+              this.openArrivalVerificationModal();
+            }, 5000);
+          } else {
+            this.showToast(res.message);
+          }
         }
-        walkOverBtn.innerHTML = '🚶‍♀️ En Route (Paired with Kavita M. - 140m)';
-        walkOverBtn.disabled = true;
-
-        this.showToast("🤝 Safety Rule Enforced: Paired with nearby verified responder Kavita M. Walking together!");
-
-        // Open Cross-Check arrival verification after 5 seconds
-        setTimeout(() => {
-          this.openArrivalVerificationModal();
-        }, 5000);
       });
     }
 
-    // "Initiate Discreet Video Call"
     const videoCallBtn = document.getElementById('respVideoCallBtn');
     if (videoCallBtn) {
       videoCallBtn.addEventListener('click', () => {
@@ -471,16 +686,16 @@ class SanginiApp {
       });
     }
 
-    // "Call 112 on her behalf"
     const respCallPoliceBtn = document.getElementById('respCallPoliceBtn');
     if (respCallPoliceBtn) {
       respCallPoliceBtn.addEventListener('click', () => {
-        if (window.cascadeManager) window.cascadeManager.escalateToTier3();
+        if (window.incidentEventLogManager) {
+          window.incidentEventLogManager.escalateIncident("Responder Police 112 Dispatch Call");
+        }
         this.showToast("🚓 Police 112 Gateway Alerted: Patrol Unit dispatched to coordinates!");
       });
     }
 
-    // "Remote Siren"
     const respRemoteSirenBtn = document.getElementById('respRemoteSirenBtn');
     if (respRemoteSirenBtn) {
       respRemoteSirenBtn.addEventListener('click', () => {
@@ -508,24 +723,17 @@ class SanginiApp {
     const modal = document.getElementById('arrivalCrossCheckModal');
     if (modal) modal.classList.remove('active');
 
-    // Simulate cross check
     const reports = [
-      { responderId: "RES-102", observation: observation },
+      { responderId: "R12", observation: observation },
       { responderId: "RES-108", observation: observation }
     ];
 
-    const result = window.fraudEngine.crossCheckArrivals(reports);
+    const result = window.fraudEngine ? window.fraudEngine.crossCheckArrivals(reports) : { status: "VERIFIED", action: "Confirmed" };
     this.showToast(`🛡️ Anti-Scam Cross-Check: ${result.status} — ${result.action}`);
-  }
 
-  updateResponderAlertCard(alert) {
-    const cardTitle = document.getElementById('respAlertTitle');
-    const cardType = document.getElementById('respAlertType');
-    const cardDistance = document.getElementById('respAlertDist');
-
-    if (cardTitle) cardTitle.innerText = alert.type.replace(/_/g, ' ').toUpperCase();
-    if (cardType) cardType.innerText = `Trigger: ${alert.triggerMethod}`;
-    if (cardDistance) cardDistance.innerText = '140m away • MG Road Indiranagar';
+    if (observation === 'victim_confirmed_needs_help' && window.incidentEventLogManager) {
+      window.incidentEventLogManager.closeIncident("Safe arrival verified by peer responders");
+    }
   }
 
   bindFraudControls() {
@@ -537,7 +745,6 @@ class SanginiApp {
       }
     });
 
-    // Preset test scenario buttons
     const presetA = document.getElementById('presetLegitStudent');
     const presetB = document.getElementById('presetSuspiciousLure');
     const presetC = document.getElementById('presetCovertRural');
@@ -610,6 +817,7 @@ class SanginiApp {
   }
 
   runFraudEvaluation() {
+    if (!window.fraudEngine) return;
     const getVal = id => {
       const el = document.getElementById(id);
       return el ? (el.type === 'checkbox' ? el.checked : el.value) : null;
@@ -632,7 +840,6 @@ class SanginiApp {
 
     const result = window.fraudEngine.evaluate(signals);
 
-    // Update UI elements
     const scoreVal = document.getElementById('fraudScoreDisplay');
     const gaugeFill = document.getElementById('fraudGaugeFill');
     const recBadge = document.getElementById('fraudRecBadge');
@@ -681,7 +888,6 @@ class SanginiApp {
 
     if (!slides.length) return;
 
-    // Generate dots
     if (dotsContainer) {
       dotsContainer.innerHTML = Array.from(slides).map((_, i) => `
         <span class="pitch-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
@@ -736,7 +942,6 @@ class SanginiApp {
 window.addEventListener('DOMContentLoaded', () => {
   window.sanginiApp = window.shaktiApp = new SanginiApp();
 
-  // Fake call buttons setup
   const acceptFakeBtn = document.getElementById('acceptFakeCallBtn');
   if (acceptFakeBtn) {
     acceptFakeBtn.addEventListener('click', () => window.sanginiApp.acceptFakeCall());
@@ -751,7 +956,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Counselor Call Responses
   const counselorWrongNumBtn = document.getElementById('counselorWrongNumBtn');
   if (counselorWrongNumBtn) {
     counselorWrongNumBtn.addEventListener('click', () => {
@@ -766,19 +970,16 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close companion video
   const closeVideoBtn = document.getElementById('closeCompanionVideoBtn');
   if (closeVideoBtn) {
     closeVideoBtn.addEventListener('click', () => window.sanginiApp.closeCompanionVideoModal());
   }
 
-  // Watchdog Safe Button
   const watchdogSafeBtn = document.getElementById('watchdogSafeCheckinBtn');
   if (watchdogSafeBtn) {
     watchdogSafeBtn.addEventListener('click', () => window.sanginiApp.checkinSafeWatchdog());
   }
 
-  // Arrival verification options
   const verifyConfirmBtn = document.getElementById('arrivalVerifyConfirmBtn');
   if (verifyConfirmBtn) {
     verifyConfirmBtn.addEventListener('click', () => window.sanginiApp.submitArrivalCrossCheck('victim_confirmed_needs_help'));

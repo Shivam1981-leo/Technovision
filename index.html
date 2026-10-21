@@ -47,6 +47,58 @@
     </div>
   </header>
 
+  <!-- ================= JURY TESTING INPUT CONSOLE ================= -->
+  <aside class="jury-console-wrapper" id="juryConsoleSection" aria-label="Jury Testing Input Console">
+    <div class="jury-console-inner">
+      <div class="jury-console-top-row">
+        <div class="jury-prompt-tag">
+          <span class="jury-pulse-indicator"></span>
+          <strong>JURY CONSOLE</strong>
+          <span class="jury-cmd-hint">[SG|&lt;context&gt;|&lt;lat&gt;|&lt;lon&gt;|&lt;silent&gt; • OK|&lt;id&gt;|&lt;code&gt;]</span>
+        </div>
+        <div class="jury-status-strip">
+          <span class="jury-status-pill" id="juryStatusContext">Context: <strong style="color: var(--text-dim);">STANDBY</strong></span>
+          <span class="jury-status-pill" id="juryStatusRadar">Peer Radar: <strong style="color: var(--safe-green);">READY</strong></span>
+          <span class="jury-status-pill" id="juryStatusTimer">60s Timer: <strong style="color: var(--text-dim);">--</strong></span>
+          <span class="jury-status-pill" id="juryStatusCode">Code: <strong style="color: var(--neon-cyan);">BLUE</strong></span>
+          <span class="jury-status-pill" id="juryStatusSilent">Alarm: <strong style="color: var(--text-dim);">STANDBY</strong></span>
+        </div>
+      </div>
+
+      <div class="jury-console-input-row">
+        <div class="jury-input-prefix">SG:&gt;_</div>
+        <input type="text" id="juryConsoleInput" class="jury-input-field" placeholder="Enter Jury Command: SG|<home|street|work|travel>|<lat>|<lon>|<silent 0 or 1> or OK|<responder id>|<short code>" autocomplete="off" spellcheck="false">
+        <button id="juryConsoleSubmitBtn" class="btn-jury-execute">⚡ Execute Command</button>
+      </div>
+
+      <div class="jury-presets-row">
+        <span class="jury-presets-label">Jury Test Presets:</span>
+        <button class="jury-chip-btn" data-cmd="SG|street|18.5204|73.8567|1" title="Street incident -> 200m Peer Mesh -> Appears on Radar (Silent: 1)">
+          📍 SG|street|18.5204|73.8567|1 (Street SOS)
+        </button>
+        <button class="jury-chip-btn home" data-cmd="SG|home|18.5204|73.8567|1" title="Home incident -> Discreet Path -> Hidden from Peer Radar (Silent: 1)">
+          🏠 SG|home|18.5204|73.8567|1 (Home Discreet)
+        </button>
+        <button class="jury-chip-btn audible" data-cmd="SG|street|18.5204|73.8567|0" title="Street incident with audible alarm">
+          🔊 SG|street|18.5204|73.8567|0 (Audible)
+        </button>
+        <button class="jury-chip-btn accept" data-cmd="OK|R12|BLUE" title="Accept incident as responder R12 with short code BLUE">
+          🤝 OK|R12|BLUE (Accept Incident)
+        </button>
+        <button class="jury-chip-btn" data-cmd="STATUS" title="Inspect active incident status">
+          ℹ️ STATUS
+        </button>
+        <button class="jury-chip-btn reset" data-cmd="RESET" title="Reset incident state">
+          🔄 RESET
+        </button>
+      </div>
+
+      <div id="juryConsoleOutput" class="jury-console-output">
+        Ready for Jury evaluation. Enter commands or click presets above. Try: <code>SG|street|18.5204|73.8567|1</code> or <code>SG|home|18.5204|73.8567|1</code>
+      </div>
+    </div>
+  </aside>
+
   <!-- Navigation Switcher Pills -->
   <nav class="navigation-bar" aria-label="Main Navigation">
     <div class="nav-tabs-wrapper">
@@ -363,7 +415,7 @@
 
             <div class="resp-action-grid">
               <button class="btn-resp-action primary" id="respWalkOverBtn">
-                🚶‍♀️ I'm Walking Toward Her Location
+                🚶‍♀️ Accept Walk as R12 (OK|R12|BLUE)
               </button>
               <button class="btn-resp-action secondary" id="respVideoCallBtn">
                 📹 Start Discreet Companion Video Call
@@ -440,6 +492,63 @@
             <h4>Trusted Contacts</h4>
             <p style="font-size: 12px; color: var(--text-muted);">Emergency contacts get live GPS telemetry & encrypted audio capture stream.</p>
             <div style="font-size: 12px; color: var(--safe-green); margin-top: 8px;">✓ 3 Contacts Alerted</div>
+          </div>
+        </div>
+
+        <!-- 60-Second Real-Time Incident Countdown Bar Widget -->
+        <div class="incident-timer-widget-card">
+          <div class="timer-widget-header">
+            <div>
+              <span class="timer-badge-pulse"></span>
+              <strong>TIER 1 INCIDENT ACCEPTANCE WINDOW (60 SECONDS)</strong>
+            </div>
+            <div id="incidentBigTimer" class="timer-big-display">60s</div>
+          </div>
+          <div class="timer-progress-track">
+            <div id="incidentTimerProgress" class="timer-progress-bar"></div>
+          </div>
+          <div class="timer-widget-footer">
+            <div id="incidentBigTimerStatus" style="font-size: 12px; color: var(--text-muted);">
+              Awaiting responder confirmation via <code>OK|R12|BLUE</code> before 60s timeout...
+            </div>
+            <div style="font-size: 11px; color: var(--neon-cyan); font-family: var(--font-mono);">
+              Short Code: <strong>BLUE</strong> • Auto-Escalation on 0s
+            </div>
+          </div>
+        </div>
+
+        <!-- Append-Only Incident Event Log Stream (Architectural Shift) -->
+        <div class="event-log-section-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <h3 style="font-size: 16px; font-family: var(--font-heading); color: var(--neon-cyan);">
+                📜 Append-Only Incident Event Log (Architectural Shift)
+              </h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Both responder radar and incident timeline read exclusively from this append-only event stream.
+                Events: <code>Triggered</code> ➔ <code>Routed</code> ➔ <code>Accepted</code> ➔ <code>Escalated</code> ➔ <code>Closed</code>.
+              </p>
+            </div>
+            <div style="font-size: 11px; background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.3); padding: 4px 8px; border-radius: 6px; color: var(--neon-cyan);">
+              ⛓️ SHA-256 Hash Chained
+            </div>
+          </div>
+
+          <div id="incidentEventLogContainer" class="event-log-container">
+            <!-- Dynamically populated from Event Log -->
+          </div>
+        </div>
+
+        <!-- Government & Emergency Integration Stubs -->
+        <div class="event-log-section-card">
+          <h3 style="font-size: 16px; font-family: var(--font-heading); color: var(--warn-amber); margin-bottom: 4px;">
+            🏛️ Critical Emergency Integration Stubs (112, 181, SMS)
+          </h3>
+          <p style="font-size: 12px; color: var(--text-muted);">
+            Official dispatch stubs maintained for police CAD, 181 Women Helpline, and telecom TRAI DLT gateways.
+          </p>
+          <div id="integrationStubsContainer">
+            <!-- Dynamically populated from Event Log Stubs -->
           </div>
         </div>
 
@@ -797,6 +906,7 @@
   <!-- Application Scripts -->
   <script src="js/audio.js"></script>
   <script src="js/fraud-engine.js"></script>
+  <script src="js/event-log.js"></script>
   <script src="js/map-mesh.js"></script>
   <script src="js/calculator.js"></script>
   <script src="js/cascade.js"></script>
