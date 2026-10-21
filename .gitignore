@@ -4,3 +4,11 @@ yarn-debug.log*
 yarn-error.log*
 .env
 .DS_Store
+
+*.apk
+*.exe
+cloudflared*
+**/build/
+**/.dart_tool/
+build/
+.dart_tool/

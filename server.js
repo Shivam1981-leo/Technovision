@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -353,6 +354,66 @@ app.post('/api/sos-trigger', (req, res) => {
 });
 
 // Fallback to index.html
+
+// ============================================================================
+// REAL MULTI-PHONE PEER MESH REGISTRY & DISCOVERY
+// ============================================================================
+let activePeers = {};
+
+// Prune inactive phones every 4 seconds
+setInterval(() => {
+  const now = Date.now();
+  for (const id in activePeers) {
+    if (now - activePeers[id].lastSeen > 45000) {
+      delete activePeers[id];
+    }
+  }
+}, 4000);
+
+// API: Phone Heartbeat & Live Telemetry
+app.post('/api/peers/heartbeat', (req, res) => {
+  const { id, name, lat, lon, role, status, battery, verification } = req.body;
+  if (!id) return res.status(400).json({ success: false, message: 'Missing peer id' });
+
+  activePeers[id] = {
+    id,
+    name: name || ('User-' + id.substring(0, 4)),
+    lat: lat !== undefined ? lat : 18.5204,
+    lon: lon !== undefined ? lon : 73.8567,
+    role: role || 'commuter',
+    status: status || 'active_mesh',
+    battery: battery !== undefined ? battery : 88,
+    verification: verification || 'aadhaar_verified',
+    lastSeen: Date.now()
+  };
+
+  res.json({
+    success: true,
+    peerCount: Object.keys(activePeers).length,
+    peers: Object.values(activePeers),
+    currentIncident: currentIncident
+  });
+});
+
+// API: Get Active Connected Peers
+app.get('/api/peers', (req, res) => {
+  res.json({
+    success: true,
+    count: Object.keys(activePeers).length,
+    peers: Object.values(activePeers)
+  });
+});
+
+// Static hosting for compiled Flutter Web App
+const flutterWebPath = path.join(__dirname, 'flutter_application_1', 'build', 'web');
+if (fs.existsSync(flutterWebPath)) {
+  app.use('/app', express.static(flutterWebPath));
+  app.use('/flutter', express.static(flutterWebPath));
+  app.get('/app*', (req, res) => {
+    res.sendFile(path.join(flutterWebPath, 'index.html'));
+  });
+}
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
